@@ -3,12 +3,13 @@ import pandas as pd
 from datetime import datetime
 
 file = "data.csv"
-fieldnames = ["time", "contents"]
+fieldnames = ["date", "hour", "minute", "contents"]
 
 def add_log(contents):
     with open(file, 'a') as f:
         writer = csv.writer(f)
-        writer.writerow([datetime.now().strftime("%Y-%m-%d %H:%M"), contents])
+        temp_time = datetime.now().strftime("%Y-%m-%d %H %M").split()
+        writer.writerow([*temp_time, contents])
 
 def handle_command(command):
     response = ""
@@ -19,9 +20,9 @@ def handle_command(command):
                 response = ""
                 for row in reader:
                     response += ' '.join(row) + '\n'
-        case "graph":
+        case "freq":
             df = pd.read_csv(file)
-            response = df.groupby("time").count().to_string() 
+            response = df.groupby(["date","hour", "minute"])["hour"].count().sort_values(ascending=False).head(5).to_string()
         case _:
             response = "OK"
     return response
