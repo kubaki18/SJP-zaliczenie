@@ -22,7 +22,7 @@ def handle_command(command):
                     response += ' '.join(row) + '\n'
         case "freq":
             df = pd.read_csv(file)
-            response = df.groupby(["date","hour", "minute"])["hour"].count().sort_values(ascending=False).head(5).to_string()
+            response = df.groupby(["hour", "minute"])["hour"].count().sort_values(ascending=False).head(5).to_string()
         case _:
             response = "OK"
     return response
